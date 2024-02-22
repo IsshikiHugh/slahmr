@@ -178,3 +178,8 @@ def save_camera_json(path, cam_R, cam_t, intrins):
             f,
             indent=1,
         )
+
+def save_meta_info(out_dir, data_dict):
+    with open(f"{out_dir}/meta_info.json", "w") as f:
+        json.dump(data_dict, f, indent=1)
+    print("SAVED META INFO")

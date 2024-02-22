@@ -9,6 +9,13 @@ __pycache__/
 *cache*
 *checkpoints*
 *_DATA
+demo
+custom_video
+inputs
+outputs
+*.zip
+
+basicModel_neutral_lbs_10_207_0_v1.0.0.pkl
 
 *.swp
 *.out
