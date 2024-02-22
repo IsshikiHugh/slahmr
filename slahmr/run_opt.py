@@ -49,16 +49,16 @@ N_STAGES = 3
 
 
 def run_opt(cfg, dataset, out_dir, device):
-    
+
     optim_time = {
         "overall": {
-                "start": None,
-                "end": None,
-                "duration": None,
-            },
+            "start": None,
+            "end": None,
+            "duration": None,
+        },
         "step-1.x-InitialStep": None,
-        "step-2.x-SmoothStep" : None,
-        "step-3.x-MotionStep" : None,
+        "step-2.x-SmoothStep": None,
+        "step-3.x-MotionStep": None,
     }
     optim_time["overall"]["start"] = time.time()
 
@@ -85,9 +85,7 @@ def run_opt(cfg, dataset, out_dir, device):
     # loss weights for all stages
     all_loss_weights = cfg.optim.loss_weights
     assert all(len(wts) == N_STAGES for wts in all_loss_weights.values())
-    stage_loss_weights = [
-        {k: wts[i] for k, wts in all_loss_weights.items()} for i in range(N_STAGES)
-    ]
+    stage_loss_weights = [{k: wts[i] for k, wts in all_loss_weights.items()} for i in range(N_STAGES)]
     max_loss_weights = {k: max(wts) for k, wts in all_loss_weights.items()}
 
     # load models
@@ -101,10 +99,8 @@ def run_opt(cfg, dataset, out_dir, device):
     body_model, fit_gender = load_smpl_body_model(paths.smpl, B * T, device=device)
 
     margs = cfg.model
-    base_model = BaseSceneModel(
-        B, T, body_model, pose_prior, fit_gender=fit_gender, **margs
-    )
-    
+    base_model = BaseSceneModel(B, T, body_model, pose_prior, fit_gender=fit_gender, **margs)
+
     base_model.initialize(obs_data, cam_data)
     base_model.to(device)
 
@@ -134,9 +130,7 @@ def run_opt(cfg, dataset, out_dir, device):
     optim.run(obs_data, cfg.optim.smpl.num_iters, out_dir, vis, writer)
 
     args = cfg.optim.smooth
-    optim = SmoothOptimizer(
-        base_model, stage_loss_weights, opt_scale=args.opt_scale, **opts
-    )
+    optim = SmoothOptimizer(base_model, stage_loss_weights, opt_scale=args.opt_scale, **opts)
     optim.run(obs_data, args.num_iters, out_dir, vis, writer)
 
     # now optimize motion model
@@ -179,12 +173,13 @@ def run_opt(cfg, dataset, out_dir, device):
     optim_time["overall"]["duration"] = optim_time["overall"]["end"] - optim_time["overall"]["start"]
     return optim_time
 
+
 @hydra.main(version_base=None, config_path="confs", config_name="config.yaml")
 def main(cfg: DictConfig):
     meta_info = {}
     meta_info["whole"] = {}
     meta_info["whole"]["start"] = time.time()
-    
+
     OmegaConf.register_new_resolver("eval", eval)
 
     out_dir = os.getcwd()
@@ -203,16 +198,14 @@ def main(cfg: DictConfig):
         optim_time = run_opt(cfg, dataset, out_dir, device)
         print("OPTIMIZATION TIME", optim_time)
         meta_info["optimization time"] = optim_time
-        
 
     if cfg.run_vis:
-        run_vis(
-            cfg, dataset, out_dir, 0, **cfg.get("vis", dict())
-        )
+        run_vis(cfg, dataset, out_dir, 0, **cfg.get("vis", dict()))
 
     meta_info["whole"]["end"] = time.time()
     meta_info["whole"]["duration"] = meta_info["whole"]["end"] - meta_info["whole"]["start"]
     save_meta_info(out_dir, meta_info)
+
 
 if __name__ == "__main__":
     main()
