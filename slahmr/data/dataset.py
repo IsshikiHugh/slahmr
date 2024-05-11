@@ -38,7 +38,7 @@ def get_dataset_from_cfg(cfg):
 
     args.sources = expand_source_paths(args.sources)
     print("DATA SOURCES", args.sources)
-    check_data_sources(args)
+    check_data_sources(args)  # ! preprocess
     return MultiPeopleDataset(
         args.sources,
         args.seq,
@@ -68,7 +68,8 @@ def check_data_sources(args):
     if args.type == "video":
         preprocess_frames(args.sources.images, args.src_path, **args.frame_opts)
     preprocess_tracks(args.sources.images, args.sources.tracks, args.sources.shots)
-    preprocess_cameras(args, overwrite=args.get("overwrite_cams", False))
+    # !!! Not use slam, RICH has static camera.
+    # preprocess_cameras(args, overwrite=args.get("overwrite_cams", False))
 
 
 class MultiPeopleDataset(Dataset):
@@ -321,8 +322,8 @@ class CameraData(object):
             #             R0, t0 = invert_camera(cam_R[sidx], cam_t[sidx])
             #             self.cam_R = torch.einsum("ij,...jk->...ik", R0, cam_R[sidx:eidx])
             #             self.cam_t = t0 + torch.einsum("ij,...j->...i", R0, cam_t[sidx:eidx])
-#             t0 = -cam_t[sidx:eidx].mean(dim=0) + torch.randn(3) * 0.1
-            t0 = -cam_t[sidx:sidx+1] + torch.randn(3) * 0.1
+            #             t0 = -cam_t[sidx:eidx].mean(dim=0) + torch.randn(3) * 0.1
+            t0 = -cam_t[sidx : sidx + 1] + torch.randn(3) * 0.1
             self.cam_R = cam_R[sidx:eidx]
             self.cam_t = cam_t[sidx:eidx] - t0
             self.is_static = False

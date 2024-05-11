@@ -20,6 +20,7 @@ JOINT_REG_PATH = f"{BASE_DIR}/_DATA/body_models/J_regressor_h36m.npy"
 # XXX: Sorry, need to change this yourself
 EGOBODY_ROOT = "/path/to/egobody"
 TDPW_ROOT = "/path/to/3DPW"
+RICH_ROOT = "/mnt/data/Datasets/RICH"
 
 
 class JointRegressor(object):

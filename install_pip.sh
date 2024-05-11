@@ -1,31 +1,19 @@
 #!/usr/bin/env bash
-set -e
-
-echo "Creating virtual environment"
-python3.10 -m venv .slahmr_env
-echo "Activating virtual environment"
-
-source $PWD/.slahmr_env/bin/activate
-
 # install pytorch
-$PWD/.slahmr_env/bin/pip install torch==1.13.0 torchvision==0.14.0 --index-url https://download.pytorch.org/whl/cu117
-
+pip install torch==1.13.0 torchvision==0.14.0 --index-url https://download.pytorch.org/whl/cu117
+# pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --index-url https://download.pytorch.org/whl/cu118
 # torch-scatter
-$PWD/.slahmr_env/bin/pip install torch-scatter -f https://data.pyg.org/whl/torch-1.13.0+cu117.html
-
+pip install torch-scatter -f https://data.pyg.org/whl/torch-1.13.0+cu117.html
+# pip install torch-scatter -f https://data.pyg.org/whl/torch-2.0.1+cu118.html
 # install PHALP
-$PWD/.slahmr_env/bin/pip install phalp[all]@git+https://github.com/brjathu/PHALP.git
-
+pip install phalp[all]@git+https://github.com/brjathu/PHALP.git
 # install source
-$PWD/.slahmr_env/bin/pip install -e .
-
+pip install -e .
 # install remaining requirements
-$PWD/.slahmr_env/bin/pip install -r requirements.txt
-
+pip install -r requirements.txt
 # install ViTPose
-$PWD/.slahmr_env/bin/pip install -v -e third-party/ViTPose
-
+pip install -v -e third-party/ViTPose
 # install DROID-SLAM
 cd third-party/DROID-SLAM
-$PWD/../../.slahmr_env/bin/python setup.py install
+python setup.py install
 cd ../..

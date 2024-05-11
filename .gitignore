@@ -3,7 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# big fil
+*.zip
+
 # data
+*demo*
+*inputs*
 *outputs*
 *renders*
 *cache*

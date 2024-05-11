@@ -2,6 +2,7 @@ import os
 import glob
 import json
 import subprocess
+import pathlib
 
 import torch
 from torch.utils.data import DataLoader
@@ -165,6 +166,14 @@ def main(cfg: DictConfig):
     OmegaConf.register_new_resolver("eval", eval)
 
     out_dir = os.getcwd()
+    out_dir = out_dir.replace("logs/video-val/2024-05-10", "rich")
+    out_dir = out_dir.replace("logs/video-val/2024-05-11", "rich")
+    out_dir = out_dir.replace("logs/video-val/2024-05-12", "rich")
+    out_dir = out_dir.replace("logs/video-val/2024-05-13", "rich")
+    out_dir = out_dir.replace("logs/video-val/2024-05-14", "rich")
+    out_dir = out_dir.replace("logs/video-val/2024-05-15", "rich")
+    pathlib.Path(out_dir).mkdir(parents=True, exist_ok=True)
+
     print("out_dir", out_dir)
     Logger.init(f"{out_dir}/opt_log.txt")
 
@@ -180,9 +189,7 @@ def main(cfg: DictConfig):
         run_opt(cfg, dataset, out_dir, device)
 
     if cfg.run_vis:
-        run_vis(
-            cfg, dataset, out_dir, 0, **cfg.get("vis", dict())
-        )
+        run_vis(cfg, dataset, out_dir, 0, **cfg.get("vis", dict()))
 
 
 if __name__ == "__main__":
